@@ -1,10 +1,28 @@
 const { Server } = require("socket.io");
+const express = require('express');
+const http = require('http');
+const cores = require('cors');
+const app = express();
+const server = http.createServer(app); // Create HTTP server using Express app
 
-const io = new Server(3002, {
-    cors:true,
+const io = new Server(server, {
+    cors: {
+        origin: "*", // Allow requests from all origins
+        methods: ["GET", "POST"],
+        credentials: true // Allow cookies to be sent
+      }
+});
+
+app.use(cores())
+
+  app.get('/', (req, res) => {
+    console.log('Called');
+    res.status(200).send('Status Ok');
   });
+  
 
     console.log("called api") 
+
     // if (io) {
     //     console.log("socket already running")
     // } else {
@@ -44,3 +62,6 @@ const io = new Server(3002, {
     // }
     // res.end();
 
+    server.listen(3002, () => {
+        console.log('Server running on port 3002');
+      });
